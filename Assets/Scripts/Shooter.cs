@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Shooter : MonoBehaviour {
-
+public class Shooter : MonoBehaviour
+{
+    public GameObject gameOverText;
     public GameObject reticle;
     public GameObject bulletPrefab;
     public Text text;
@@ -17,8 +18,11 @@ public class Shooter : MonoBehaviour {
     bool mouseOutside;
     public Color currentColor;
 
+
     void Start()
     {
+
+        gameOverText.SetActive(false);
         ammo = maxAmmo;
         mouseOutside = false;
         reloading = false;
@@ -30,8 +34,8 @@ public class Shooter : MonoBehaviour {
         ammo += dAmmo;
         text.text = "Ammo: " + ammo.ToString();
     }
-    
-	void MoveReticle()
+
+    void MoveReticle()
     {
         reticle.transform.position = Input.mousePosition;
     }
@@ -44,6 +48,25 @@ public class Shooter : MonoBehaviour {
         Vector3 direction = (pos - transform.position).normalized * speed;
         Quaternion rotation = Quaternion.LookRotation(direction);
         GameObject bullet = Instantiate(bulletPrefab, pos, rotation) as GameObject;
+        if (Input.GetKey(KeyCode.W))
+        {
+            bullet.name = "red";
+            currentColor = Color.red;
+        }
+
+        else if (Input.GetKey(KeyCode.E))
+        {
+            bullet.name = "blue";
+            currentColor = Color.blue;
+        }
+
+        else if (Input.GetKey(KeyCode.R))
+        {
+            bullet.name = "green";
+            currentColor = Color.green;
+        }
+
+        else currentColor = Color.white;
         bullet.GetComponentInChildren<Renderer>().material.color = currentColor;
         bullet.GetComponent<Rigidbody>().velocity = direction;
         Destroy(bullet, 3f);
@@ -87,10 +110,10 @@ public class Shooter : MonoBehaviour {
     Input.mousePosition.x > Screen.width ||
     Input.mousePosition.y < 0f ||
     Input.mousePosition.y > Screen.height) && mouseOutside)
-            {
-                mouseOutside = false;
-                MouseOutside(false);
-            }
+        {
+            mouseOutside = false;
+            MouseOutside(false);
+        }
     }
 
     void MouseOutside(bool outside)
@@ -101,13 +124,23 @@ public class Shooter : MonoBehaviour {
             Reload();
         }
     }
-	
-	void Update () {
+
+    void Update()
+    {
+        
         if (Input.GetMouseButtonDown(0) && ammo > 0 && !reloading)
         {
             Shoot();
         }
         CheckMouseOutside();
         MoveReticle();
-	}
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log("I have collided");
+        this.gameObject.SetActive(false);
+        gameOverText.SetActive(true);
+        other.gameObject.SetActive(false);
+    }
 }

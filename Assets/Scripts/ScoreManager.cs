@@ -5,9 +5,11 @@ using UnityEngine.UI;
 //PLAYER SCORE DOES NOT STOP ON PLAYER DEATH. NEED ACCESS TO GITHUB PROJECT CODE TO IMPLEMENT.
 
 
-public class ScoreManager : MonoBehaviour {
+public class ScoreManager : MonoBehaviour
+{
 
-	public Text scoreText;
+    public GameObject enemyObj;
+    public Text scoreText;
 	public Text highScoreText;
 
 	public float scoreCount;
@@ -23,14 +25,18 @@ public class ScoreManager : MonoBehaviour {
 		{
 			highScoreCount = PlayerPrefs.GetFloat ("Highscore");
 		}
-	}
+        GameObject g = GameObject.Find("Enemy");
+        enemy eScript = g.GetComponent<enemy>();
+    }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
 
-		if (scoreIncreasing) 
+		if (enemyObj.GetComponent<enemy>().isEnemyDead) 
 		{
-			scoreCount += pointsPerSecond * Time.deltaTime;
+
+			scoreCount += 10;
 		}
 
 		if (scoreCount > highScoreCount) 
@@ -39,7 +45,7 @@ public class ScoreManager : MonoBehaviour {
 			PlayerPrefs.SetFloat ("Highscore", highScoreCount);
 		}
 
-		scoreText.text = "Score: " + Mathf.Round (scoreCount);
+		scoreText.text = "Score: " + scoreCount;
 		highScoreText.text = "Highscore: " + Mathf.Round (highScoreCount);
 	}
 }

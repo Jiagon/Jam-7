@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class enemy : MonoBehaviour {
 
+
+    public int color;
+    public bool isEnemyDead = false;
+    private float transformZ;
+ 
+
     // Use this for initialization
     public Transform player;
     //At what distance will the enemy walk towards the player?
@@ -14,6 +20,8 @@ public class enemy : MonoBehaviour {
     private Vector3 smoothVelocity = Vector3.zero;
     //Call every frame
     void Start() {
+        
+        transformZ = transform.position.z;
 
     }
 
@@ -37,7 +45,47 @@ public class enemy : MonoBehaviour {
             transform.position = Vector3.SmoothDamp(transform.position, player.position, ref smoothVelocity, smoothTime);
         }
     }
-  
+    void OnCollisionEnter(Collision col)
+    {
+        Debug.Log("collided");
+
+        if (col.gameObject.name == "red" && color == 0)
+        {
+            isEnemyDead = true;
+            Destroy(col.gameObject);
+            this.gameObject.SetActive(false);
+            Infinte();
+
+
+        }
+        else if (col.gameObject.name == "blue" && color == 1)
+        {
+            isEnemyDead = true;
+            Destroy(col.gameObject);
+            this.gameObject.SetActive(false);
+            Infinte();
+        }
+        else if (col.gameObject.name == "green" && color == 2)
+        {
+            isEnemyDead = true;
+            Destroy(col.gameObject);
+            this.gameObject.SetActive(false);
+            Infinte();
+
+        }
+
+       
+
+
+    }
+    void Infinte()
+    {
+        isEnemyDead = false;
+        this.gameObject.SetActive(true);
+        transform.position = new Vector3(Random.Range(-20,20), 2f, transformZ);
+    }
+
+
 }
    
 
