@@ -32,12 +32,14 @@ public class ScoreManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-
-		if (enemyObj.GetComponent<enemy>().isEnemyDead) 
-		{
-
-			scoreCount += 10;
-		}
+        foreach(Transform child in enemyObj.transform)
+        {
+            if (child.gameObject.GetComponent<enemy>().isEnemyDead)
+            {
+                scoreCount += 10;
+                child.gameObject.GetComponent<enemy>().Infinte();
+            }
+        }
 
 		if (scoreCount > highScoreCount) 
 		{

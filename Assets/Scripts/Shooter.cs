@@ -8,6 +8,7 @@ public class Shooter : MonoBehaviour
     public GameObject gameOverText;
     public GameObject reticle;
     public GameObject bulletPrefab;
+    public Text lifeText;
     public Text text;
     int maxAmmo = 10;
     int ammo;
@@ -17,16 +18,20 @@ public class Shooter : MonoBehaviour
     bool reloading;
     bool mouseOutside;
     public Color currentColor;
+    int life = 3;
 
+    string bulName;
 
     void Start()
     {
-
         gameOverText.SetActive(false);
         ammo = maxAmmo;
         mouseOutside = false;
         reloading = false;
         UpdateAmmo(0);
+        bulName = "red";
+        currentColor = Color.red;
+        lifeText.text = "Life: " + life;
     }
 
     void UpdateAmmo(int dAmmo)
@@ -48,29 +53,32 @@ public class Shooter : MonoBehaviour
         Vector3 direction = (pos - transform.position).normalized * speed;
         Quaternion rotation = Quaternion.LookRotation(direction);
         GameObject bullet = Instantiate(bulletPrefab, pos, rotation) as GameObject;
-        if (Input.GetKey(KeyCode.W))
-        {
-            bullet.name = "red";
-            currentColor = Color.red;
-        }
 
-        else if (Input.GetKey(KeyCode.E))
-        {
-            bullet.name = "blue";
-            currentColor = Color.blue;
-        }
-
-        else if (Input.GetKey(KeyCode.R))
-        {
-            bullet.name = "green";
-            currentColor = Color.green;
-        }
-
-        else currentColor = Color.white;
+        bullet.name = bulName;
         bullet.GetComponentInChildren<Renderer>().material.color = currentColor;
         bullet.GetComponent<Rigidbody>().velocity = direction;
         Destroy(bullet, 3f);
         UpdateAmmo(-1);
+    }
+
+    string ChangeColor()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            bulName = "red";
+            currentColor = Color.red;
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            bulName = "blue";
+            currentColor = Color.blue;
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            bulName = "green";
+            currentColor = Color.green;
+        }
+        return bulName;
     }
 
     void Reload()
@@ -98,18 +106,18 @@ public class Shooter : MonoBehaviour
     void CheckMouseOutside()
     {
         if ((Input.mousePosition.x < 0f ||
-    Input.mousePosition.x > Screen.width ||
-    Input.mousePosition.y < 0f ||
-    Input.mousePosition.y > Screen.height) && !mouseOutside)
+            Input.mousePosition.x > Screen.width ||
+            Input.mousePosition.y < 0f ||
+            Input.mousePosition.y > Screen.height) && !mouseOutside)
         {
             mouseOutside = true;
             MouseOutside(true);
         }
 
         else if (!(Input.mousePosition.x < 0f ||
-    Input.mousePosition.x > Screen.width ||
-    Input.mousePosition.y < 0f ||
-    Input.mousePosition.y > Screen.height) && mouseOutside)
+            Input.mousePosition.x > Screen.width ||
+            Input.mousePosition.y < 0f ||
+            Input.mousePosition.y > Screen.height) && mouseOutside)
         {
             mouseOutside = false;
             MouseOutside(false);
@@ -127,7 +135,11 @@ public class Shooter : MonoBehaviour
 
     void Update()
     {
-        
+        if (Input.anyKey)
+        {
+            ChangeColor();
+        }
+
         if (Input.GetMouseButtonDown(0) && ammo > 0 && !reloading)
         {
             Shoot();
@@ -139,8 +151,17 @@ public class Shooter : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log("I have collided");
-        this.gameObject.SetActive(false);
-        gameOverText.SetActive(true);
-        other.gameObject.SetActive(false);
+        life -= 1;
+        lifeText.text = "Life: " + life;
+        if(life <= 0)
+        {
+            this.gameObject.SetActive(false);
+            gameOverText.SetActive(true);
+            other.gameObject.SetActive(false);
+        }
+    }
+    public void Hit(Collider col)
+    {
+        OnTriggerEnter(col);
     }
 }

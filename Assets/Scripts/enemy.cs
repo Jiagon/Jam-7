@@ -5,7 +5,7 @@ using UnityEngine;
 public class enemy : MonoBehaviour {
 
 
-    public int color;
+    public int color;                   // Red is 0, blue is 1, green is 2
     public bool isEnemyDead = false;
     private float transformZ;
  
@@ -49,36 +49,37 @@ public class enemy : MonoBehaviour {
     {
         Debug.Log("collided");
 
+        Debug.Log("Collision name: " + col.gameObject.name);
+
         if (col.gameObject.name == "red" && color == 0)
         {
             isEnemyDead = true;
             Destroy(col.gameObject);
             this.gameObject.SetActive(false);
-            Infinte();
-
-
         }
         else if (col.gameObject.name == "blue" && color == 1)
         {
             isEnemyDead = true;
             Destroy(col.gameObject);
             this.gameObject.SetActive(false);
-            Infinte();
         }
         else if (col.gameObject.name == "green" && color == 2)
         {
             isEnemyDead = true;
             Destroy(col.gameObject);
             this.gameObject.SetActive(false);
-            Infinte();
-
         }
-
+        // Else, must have collided with the player
+        else if(col.gameObject.tag == "Player")
+        {
+            Infinte();
+            col.gameObject.GetComponent<Shooter>().Hit(GetComponent<Collider>());
+        }
        
 
 
     }
-    void Infinte()
+    public void Infinte()
     {
         isEnemyDead = false;
         this.gameObject.SetActive(true);
