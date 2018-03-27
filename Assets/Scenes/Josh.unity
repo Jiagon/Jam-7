@@ -144,6 +144,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1267660135895046, guid: 3f48071eb2ca8fe4a8cd6cc5530fb8e2,
     type: 2}
   text: {fileID: 791263696}
+  currentColor: {r: 1, g: 1, b: 1, a: 0}
 --- !u!4 &329890590
 Transform:
   m_ObjectHideFlags: 0

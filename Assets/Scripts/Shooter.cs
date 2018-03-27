@@ -15,6 +15,7 @@ public class Shooter : MonoBehaviour {
     float reloadTime = 1.6f;
     bool reloading;
     bool mouseOutside;
+    public Color currentColor;
 
     void Start()
     {
@@ -43,6 +44,7 @@ public class Shooter : MonoBehaviour {
         Vector3 direction = (pos - transform.position).normalized * speed;
         Quaternion rotation = Quaternion.LookRotation(direction);
         GameObject bullet = Instantiate(bulletPrefab, pos, rotation) as GameObject;
+        bullet.GetComponentInChildren<Renderer>().material.color = currentColor;
         bullet.GetComponent<Rigidbody>().velocity = direction;
         Destroy(bullet, 3f);
         UpdateAmmo(-1);
