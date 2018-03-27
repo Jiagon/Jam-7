@@ -47,10 +47,6 @@ public class enemy : MonoBehaviour {
     }
     void OnCollisionEnter(Collision col)
     {
-        Debug.Log("collided");
-
-        Debug.Log("Collision name: " + col.gameObject.name);
-
         if (col.gameObject.name == "red" && color == 0)
         {
             isEnemyDead = true;
@@ -88,6 +84,3 @@ public class enemy : MonoBehaviour {
 
 
 }
-   
-
-

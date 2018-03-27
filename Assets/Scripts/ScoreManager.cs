@@ -25,8 +25,8 @@ public class ScoreManager : MonoBehaviour
 		{
 			highScoreCount = PlayerPrefs.GetFloat ("Highscore");
 		}
-        GameObject g = GameObject.Find("Enemy");
-        enemy eScript = g.GetComponent<enemy>();
+        //GameObject g = GameObject.Find("Enemy");
+        //enemy eScript = g.GetComponent<enemy>();
     }
 	
 	// Update is called once per frame

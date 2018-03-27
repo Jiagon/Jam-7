@@ -22,6 +22,8 @@ public class Shooter : MonoBehaviour
 
     string bulName;
 
+    bool triggerDown = false;
+
     void Start()
     {
         gameOverText.SetActive(false);
@@ -63,17 +65,17 @@ public class Shooter : MonoBehaviour
 
     string ChangeColor()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetButtonDown("B"))
         {
             bulName = "red";
             currentColor = Color.red;
         }
-        else if (Input.GetKeyDown(KeyCode.E))
+        else if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("X"))
         {
             bulName = "blue";
             currentColor = Color.blue;
         }
-        else if (Input.GetKeyDown(KeyCode.R))
+        else if (Input.GetKeyDown(KeyCode.R) || Input.GetButtonDown("A"))
         {
             bulName = "green";
             currentColor = Color.green;
@@ -126,7 +128,6 @@ public class Shooter : MonoBehaviour
 
     void MouseOutside(bool outside)
     {
-        Debug.Log(outside);
         if (outside && !reloading)
         {
             Reload();
@@ -140,9 +141,14 @@ public class Shooter : MonoBehaviour
             ChangeColor();
         }
 
-        if (Input.GetMouseButtonDown(0) && ammo > 0 && !reloading)
+        if ((Input.GetMouseButtonDown(0) || Input.GetAxis("LeftTrigger") > 0) && ammo > 0 && !reloading && !triggerDown)
         {
+            triggerDown = true;
             Shoot();
+        }
+        if(Input.GetAxis("LeftTrigger") <= 0)
+        {
+            triggerDown = false;
         }
         CheckMouseOutside();
         MoveReticle();
@@ -150,7 +156,6 @@ public class Shooter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("I have collided");
         life -= 1;
         lifeText.text = "Life: " + life;
         if(life <= 0)
